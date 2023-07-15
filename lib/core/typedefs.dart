@@ -40,4 +40,5 @@ typedef EmptyBuilder<T extends Object> = Widget Function(
 });
 
 /// Callback for Show/Hide scroll top
+// ignore: avoid_positional_boolean_parameters
 typedef ScrollTopCallback = void Function(bool show);

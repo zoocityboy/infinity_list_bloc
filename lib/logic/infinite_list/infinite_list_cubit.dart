@@ -50,12 +50,9 @@ class InfiniteListCubit<T extends Object> extends Cubit<InfiniteListState> {
       pageCubit[page] = PageCubit(page, limit, loadNext);
     }
     pageCubit[page]!.fetch();
-
-    final nextPage = page + 1;
-    pageCubit[nextPage]?.fetch();
   }
 
-  PageCubit<T> getPageCubit(int page) {
+  PageCubit<T> get(int page) {
     return pageCubit[page]!;
   }
 

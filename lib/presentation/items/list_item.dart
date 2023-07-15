@@ -30,8 +30,7 @@ class ListItem<T extends Object> extends StatelessWidget {
         final indexOnPage = index % state.limit;
         if (state is LoadedListState) {
           return BlocProvider.value(
-            value: BlocProvider.of<InfiniteListCubit<T>>(context)
-                .getPageCubit(page)
+            value: BlocProvider.of<InfiniteListCubit<T>>(context).get(page)
               ..fetch(),
             child: Builder(
               builder: (context) {

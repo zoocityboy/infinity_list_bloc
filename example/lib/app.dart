@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
+import 'presentation/pages/user_grid_page.dart';
 import 'repository/post_repository.dart';
 
 class MyApp extends StatelessWidget {
@@ -49,7 +50,8 @@ class MyApp extends StatelessWidget {
           routes: {
             '/home': (context) => const HomePage(),
             '/feed': (context) => const FeedPage(),
-            '/user': (context) => const UserListPage(),
+            '/user_list': (context) => const UserListPage(),
+            '/user_grid': (context) => const UserGridPage(),
           }),
     );
   }

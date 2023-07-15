@@ -1,4 +1,5 @@
 import 'package:example/model/user.dart';
+import 'package:example/presentation/widget/user_grid_tile.dart';
 import 'package:example/presentation/widget/user_list_tile.dart';
 import 'package:example/repository/post_repository.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +8,14 @@ import 'package:infinite_listview_bloc/infinite_listview_bloc.dart';
 
 import '../widget/app_bar_content.dart';
 
-class UserListPage extends StatefulWidget {
-  const UserListPage({super.key});
+class UserGridPage extends StatefulWidget {
+  const UserGridPage({super.key});
 
   @override
-  State<UserListPage> createState() => _UserListPageState();
+  State<UserGridPage> createState() => _UserGridPageState();
 }
 
-class _UserListPageState extends State<UserListPage> {
+class _UserGridPageState extends State<UserGridPage> {
   final ScrollController scrollController = ScrollController();
   bool showScrollTop = false;
   @override
@@ -45,18 +46,21 @@ class _UserListPageState extends State<UserListPage> {
             title: Text('Infinite ListView Cubit'),
             bottom: AppBarContent(),
           ),
-          InfiniteSliverList<User>(
+          InfiniteSliverGrid<User>(
             limit: 20,
-            itemExtent: 64,
             useAnimation: false,
-            useSeparated: false,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+            ),
             itemBuilder: (context, item, index, {indexOnPage, key, page}) =>
-                UserListTile(
+                UserGridTile(
               item: item,
               index: index,
             ),
             itemPlacholderBuilder: (context, index, {indexOnPage, key, page}) =>
-                UserListTile.skeleton(index),
+                UserGridTile.skeleton(index),
             loadNext: (page, limit) =>
                 context.read<UserRepository>().list(page: page, limit: limit),
           ),
@@ -70,32 +74,6 @@ class _UserListPageState extends State<UserListPage> {
               },
             )
           : null,
-    );
-  }
-}
-
-class DemoItem extends StatelessWidget {
-  const DemoItem({super.key, required this.label, required this.value});
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(style: textTheme.bodySmall, children: [
-            TextSpan(
-              text: '$value\n',
-              style: textTheme.titleMedium,
-            ),
-            TextSpan(
-              text: label,
-              style: textTheme.bodySmall,
-            ),
-          ])),
     );
   }
 }

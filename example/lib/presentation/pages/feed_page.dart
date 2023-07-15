@@ -1,3 +1,4 @@
+import 'package:example/presentation/widget/app_bar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_listview_bloc/presentation/infinite_sliverlist.dart';
@@ -40,56 +41,13 @@ class _FeedPageState extends State<FeedPage> {
           cardTheme: const CardTheme(elevation: 0, color: Colors.transparent),
         ),
         child: CustomScrollView(controller: scrollController, slivers: [
-          SliverAppBar(
-            actions: const [],
-            title: const Text('Infinite SliverList Cubit'),
+          const SliverAppBar(
+            actions: [],
+            title: Text('Infinite SliverList Cubit'),
             collapsedHeight: kToolbarHeight,
             expandedHeight: kToolbarHeight * 2,
             flexibleSpace: FlexibleSpaceBar(
-              background: Padding(
-                padding: const EdgeInsets.only(top: kToolbarHeight),
-                child: Center(
-                  child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        DemoItem(
-                          label: 'Total Count',
-                          value: context
-                              .read<PostRepository>()
-                              .totalCount
-                              .toString(),
-                        ),
-                        const SizedBox(
-                          height: 32,
-                          child: VerticalDivider(
-                            width: 4,
-                          ),
-                        ),
-                        DemoItem(
-                          label: 'Total Pages',
-                          value: context
-                              .read<PostRepository>()
-                              .totalPages
-                              .toString(),
-                        ),
-                        const SizedBox(
-                          height: 32,
-                          child: VerticalDivider(
-                            width: 4,
-                          ),
-                        ),
-                        DemoItem(
-                          label: 'Page Size',
-                          value: context
-                              .read<PostRepository>()
-                              .pageSize
-                              .toString(),
-                        ),
-                      ]),
-                ),
-              ),
+              background: AppBarContent(),
             ),
             pinned: false,
             floating: true,

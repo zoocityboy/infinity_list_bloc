@@ -76,6 +76,26 @@ InfiniteListView<User>(
 );
 ```
 
+# Pagination
+
+## Offset pagination
+
+```bash
+GET /items?limit=20&offset=100
+```
+
+## Keyset Pagination
+
+```bash
+GET /items?limit=20&created:lte:2019-01-20T00:00:00
+```
+
+## Seek Pagination
+
+```bash
+GET /items?limit=20&after_id=20
+```
+
 [analysis_options_yaml]: https://github.com/zoocityboy/zoo_lints/blob/main/analysis_options.yaml
 [ci_badge]: https://github.com/zoocityboy/zoo_lints/workflows/ci/badge.svg?style=flat-square
 [ci_badge_link]: https://github.com/zoocityboy/zoo_lints/actions

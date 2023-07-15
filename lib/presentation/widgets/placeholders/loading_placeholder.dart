@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../infinite_listview_bloc.dart';
 import '../item_separator.dart';
 
-class LoadingPlaceholder<T extends Object> extends StatelessWidget {
-  const LoadingPlaceholder({
+class LoadingListPlaceholder<T extends Object> extends StatelessWidget {
+  const LoadingListPlaceholder({
     required this.limit,
     super.key,
     this.itemBuilder,

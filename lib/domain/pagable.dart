@@ -12,6 +12,7 @@ class Pagable<T> {
     required this.pageSize,
     this.items = const [],
   });
+
   final int totalCount;
   final int totalPages;
   final int page;

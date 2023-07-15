@@ -3,7 +3,7 @@ import 'package:infinite_listview_bloc/infinite_listview_bloc.dart';
 
 import '../model/user.dart';
 
-const fakeDelay = 350;
+const fakeDelay = 1350;
 typedef Range = (int offset, int limit);
 
 abstract class BaseRepository {

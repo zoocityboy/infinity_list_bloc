@@ -26,8 +26,14 @@ class PageLoaded<T> extends PageState {
 
 /// Simple Error state for page loading
 class PageError extends PageState {
-  const PageError(this.exception);
-  final Exception exception;
+  PageError(Object error) {
+    if (error is Exception) {
+      exception = error;
+    } else {
+      exception = Exception(error.toString());
+    }
+  }
+  late final Exception exception;
   @override
   List<Object> get props => [limit, exception];
 }

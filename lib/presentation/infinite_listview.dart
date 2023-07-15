@@ -1,44 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import '../core/typedefs.dart';
 import '../domain/pagable.dart';
 import '../logic/infinite_list/infinite_list_cubit.dart';
-import '../logic/page_cubit/page_cubit.dart';
+import 'base/infinite_base_list.dart';
 import 'items/list_item.dart';
 import 'widgets/item_separator.dart';
-import 'widgets/placeholders/item_error_placeholder.dart';
 import 'widgets/placeholders/item_placeholder.dart';
 import 'widgets/placeholders/loading_placeholder.dart';
 
-class InfiniteListView<T extends Object> extends StatefulWidget {
+class InfiniteListView<T extends Object> extends BaseInfiniteSliverList<T> {
   const InfiniteListView({
-    required this.itemBuilder,
-    required this.loadNext,
+    required super.itemBuilder,
+    required super.loadNext,
     super.key,
-    this.separatorBuilder,
-    this.emptyBuilder,
-    this.failureBuilder,
-    this.itemPlacholderBuilder,
-    this.scrollController,
-    this.limit = 10,
-    this.useAnimation = false,
-    this.useSeparated = false,
-    this.itemExtent,
+    super.separatorBuilder,
+    super.emptyBuilder,
+    super.failureBuilder,
+    super.itemPlacholderBuilder,
+    super.scrollController,
+    super.limit = 10,
+    super.useAnimation = false,
+    super.useSeparated = false,
+    super.itemExtent,
   });
-  final EmptyBuilder? emptyBuilder;
-  final FailureBuilder? failureBuilder;
-  final ItemBuilder<T> itemBuilder;
-  final IndexedWidgetBuilder? separatorBuilder;
-  final PagedBuilder? itemPlacholderBuilder;
-  final LoadNextCallback<T> loadNext;
-  final ScrollController? scrollController;
-  final int limit;
-  final bool useAnimation;
-  final double? itemExtent;
-  final bool useSeparated;
-
   @override
   State<InfiniteListView<T>> createState() => _InfiniteListViewState<T>();
 }
@@ -76,80 +62,25 @@ class _InfiniteListViewState<T extends Object>
   }
 }
 
-class _ListView<T extends Object> extends StatelessWidget {
+class _ListView<T extends Object> extends BaseListView<T>
+    with InfiniteListContent<ListView, T> {
   const _ListView({
-    required this.itemBuilder,
-    this.itemPlacholderBuilder,
-    this.separatorBuilder,
-    this.failureBuilder,
-    this.emptyBuilder,
-    this.useAnimation = false,
-    this.useSeparated = false,
-    this.itemExtent,
-    this.scrollController,
+    required super.itemBuilder,
+    super.emptyBuilder,
+    super.failureBuilder,
+    super.itemExtent,
+    super.itemPlacholderBuilder,
     super.key,
+    super.scrollController,
+    super.separatorBuilder,
+    super.useAnimation,
+    super.useSeparated,
   });
-  final ItemBuilder<T> itemBuilder;
-  final IndexedWidgetBuilder? separatorBuilder;
-  final PagedBuilder? itemPlacholderBuilder;
-  final FailureBuilder? failureBuilder;
-  final EmptyBuilder? emptyBuilder;
-  final bool useAnimation;
-  final bool useSeparated;
-  final double? itemExtent;
-  final ScrollController? scrollController;
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<InfiniteListCubit<T>, InfiniteListState>(
-      builder: (context, state) {
-        return switch (state) {
-          InitialListState() => LoadingPlaceholder(
-              limit: state.limit,
-              itemExtent: itemExtent,
-              useSeparated: useSeparated,
-              separatorBuilder: separatorBuilder,
-              itemBuilder: (context, index) {
-                return itemPlacholderBuilder?.call(
-                      context,
-                      index,
-                      page: 0,
-                      indexOnPage: index,
-                    ) ??
-                    const ItemPlaceholder();
-              },
-            ),
-          ErrorListState(exception: final exception) =>
-            failureBuilder?.call(context, exception: Exception('$exception')) ??
-                const ItemErrorPlaceholder(),
-          LoadingListState() => LoadingPlaceholder(
-              limit: state.limit,
-              itemExtent: itemExtent,
-              useSeparated: useSeparated,
-              separatorBuilder: separatorBuilder,
-              itemBuilder: (context, index) {
-                return itemPlacholderBuilder?.call(
-                      context,
-                      index,
-                      page: 0,
-                      indexOnPage: index,
-                    ) ??
-                    const ItemPlaceholder();
-              },
-            ),
-          LoadedListState(paged: final paged) => AnimationLimiter(
-              child: RefreshIndicator(
-                onRefresh: () => context.read<InfiniteListCubit<T>>().refresh(),
-                child: useSeparated
-                    ? separated(context, paged as Pagable<T>)
-                    : builder(context, paged as Pagable<T>),
-              ),
-            )
-        };
-      },
-    );
-  }
+  Widget build(BuildContext context) => contentBuild(context);
 
+  @override
   ListView separated(BuildContext context, Pagable<T> paged) =>
       ListView.separated(
         controller: scrollController,
@@ -169,6 +100,7 @@ class _ListView<T extends Object> extends StatelessWidget {
           );
         },
       );
+  @override
   ListView builder(BuildContext context, Pagable<T> paged) => ListView.builder(
         controller: scrollController,
         itemCount: paged.totalCount,
@@ -182,4 +114,18 @@ class _ListView<T extends Object> extends StatelessWidget {
           );
         },
       );
+
+  @override
+  Widget loadingPlaceholder(
+    BuildContext context,
+    int limit,
+  ) {
+    return LoadingListPlaceholder(
+      limit: limit,
+      itemBuilder: (context, index) => const ItemPlaceholder(),
+      separatorBuilder: separatorBuilder,
+      itemExtent: itemExtent,
+      useSeparated: useSeparated,
+    );
+  }
 }
