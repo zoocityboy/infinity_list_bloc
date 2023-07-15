@@ -1,0 +1,1 @@
+const kContentAspectRatio = .8;

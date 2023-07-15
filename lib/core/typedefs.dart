@@ -8,14 +8,19 @@ typedef LoadNextCallback<T> = Future<Pagable<T>> Function(int page, int limit);
 /// Item builder for row in InfiniteListView with extra [T] item attribute
 typedef ItemBuilder<T extends Object> = Widget Function(
   BuildContext context,
-  T item, {
+  T item,
+  int index, {
   Key? key,
   int? page,
   int? indexOnPage,
 });
-
+typedef SeparatorBuilder<T extends Object> = Widget Function(
+  BuildContext context,
+  int index,
+);
 typedef PagedBuilder<T extends Object> = Widget Function(
-  BuildContext context, {
+  BuildContext context,
+  int index, {
   Key? key,
   int? page,
   int? indexOnPage,
@@ -28,7 +33,11 @@ typedef FailureBuilder<T extends Object> = Widget Function(
 });
 
 /// Empty builder for InfiniteListView with optional [title] and [description] attribute
-typedef EmptyBuilder<T extends Object> = Widget Function(BuildContext context, {String? title, String? description});
+typedef EmptyBuilder<T extends Object> = Widget Function(
+  BuildContext context, {
+  String? title,
+  String? description,
+});
 
 /// Callback for Show/Hide scroll top
 typedef ScrollTopCallback = void Function(bool show);

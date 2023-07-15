@@ -11,7 +11,8 @@ import '../page_cubit/page_cubit.dart';
 part 'infinite_list_state.dart';
 
 class InfiniteListCubit<T extends Object> extends Cubit<InfiniteListState> {
-  InfiniteListCubit(this.limit, this.loadNext) : super(const InitialListState());
+  InfiniteListCubit(this.limit, this.loadNext)
+      : super(const InitialListState());
   @protected
   final int limit;
   @protected
@@ -21,12 +22,21 @@ class InfiniteListCubit<T extends Object> extends Cubit<InfiniteListState> {
 
   void initialize({int page = 0}) {
     emit(const LoadingListState());
-    loadNext(page, limit).then((value) {
-      for (var i = 0; i < value.totalPages; i++) {
-        pageCubit[i] = PageCubit(i, limit, loadNext);
-      }
-      emit(LoadedListState(value));
-    }).catchError((Object error) {
+    loadNext(page, limit).then(
+      (value) {
+        emit(LoadedListState(value));
+        for (var i = 0; i < value.totalPages; i++) {
+          pageCubit[i] = PageCubit(i, limit, loadNext);
+        }
+      },
+      onError: (Object error) {
+        if (error is Exception) {
+          emit(ErrorListState(error));
+        } else {
+          emit(ErrorListState(Exception(error.toString())));
+        }
+      },
+    ).catchError((Object error) {
       if (error is Exception) {
         emit(ErrorListState(error));
       } else {
@@ -40,6 +50,9 @@ class InfiniteListCubit<T extends Object> extends Cubit<InfiniteListState> {
       pageCubit[page] = PageCubit(page, limit, loadNext);
     }
     pageCubit[page]!.fetch();
+
+    final nextPage = page + 1;
+    pageCubit[nextPage]?.fetch();
   }
 
   PageCubit<T> getPageCubit(int page) {

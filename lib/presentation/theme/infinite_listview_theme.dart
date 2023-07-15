@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 
 class InfiniteListViewThemeData with Diagnosticable {
   InfiniteListViewThemeData({
+    required this.separatorColor,
+    required this.skeletonColor,
     this.primaryColor,
   });
   final Color? primaryColor;
+  final Color separatorColor;
+  final Color skeletonColor;
 }
 
 class InfiniteListViewTheme extends InheritedTheme {
@@ -22,7 +26,11 @@ class InfiniteListViewTheme extends InheritedTheme {
   /// The properties for descendant popup menu widgets.
   final InfiniteListViewThemeData data;
   static InfiniteListViewThemeData general(BuildContext context) {
-    return InfiniteListViewThemeData();
+    final colorScheme = Theme.of(context).colorScheme;
+    return InfiniteListViewThemeData(
+      separatorColor: colorScheme.outline.withAlpha(32),
+      skeletonColor: colorScheme.outline.withAlpha(32),
+    );
   }
 
   /// The closest instance of this class's [data] value that encloses the given
@@ -35,8 +43,10 @@ class InfiniteListViewTheme extends InheritedTheme {
   /// InfiniteListViewThemeData theme = InfiniteListViewTheme.of(context);
   /// ```
   static InfiniteListViewThemeData of(BuildContext context) {
-    final infiniteListViewTheme = context.dependOnInheritedWidgetOfExactType<InfiniteListViewTheme>();
-    return infiniteListViewTheme?.data ?? InfiniteListViewTheme.general(context);
+    final infiniteListViewTheme =
+        context.dependOnInheritedWidgetOfExactType<InfiniteListViewTheme>();
+    return infiniteListViewTheme?.data ??
+        InfiniteListViewTheme.general(context);
   }
 
   @override
@@ -45,5 +55,6 @@ class InfiniteListViewTheme extends InheritedTheme {
   }
 
   @override
-  bool updateShouldNotify(InfiniteListViewTheme oldWidget) => data != oldWidget.data;
+  bool updateShouldNotify(InfiniteListViewTheme oldWidget) =>
+      data != oldWidget.data;
 }
